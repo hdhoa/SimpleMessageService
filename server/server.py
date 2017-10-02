@@ -18,7 +18,7 @@ async def consumer(websocket, message):
 		if ('from' in data) and ('to' in data) and ('msg' in data) :
 		#	print( 'send '+ data['msg'] + ' from ' + data['from'] + ' to ' + data['to'])
 			ws = connected[data['to']]
-			await ws.send(data['msg'])
+			await ws.send(str(message))
 
 
 
