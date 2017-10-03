@@ -29,11 +29,12 @@ The host and port can be configured in server/config.py
 
 * On connection, in order to log in, the server expects a json object of the following type :
 {'login':'name of the peer'}
+Note that the login automatically registers the peer to the server (there is no create user phase, as we do not handle security anyway).
 
 * To send a message, the server expects json objects of the following type :
 {'from':'name of the sender', 'to':'name of the destination', 'msg':'message as a string' }
-
-
+If the destination peer B does not exist, you will receive a json object : {"error": "peer B does not exist"}
+If the destination peer B is disconnected, you will receive a json object : {"error": "connection to B closed"}
 ## Questions
 
 ### Which share of web users will this implementation address? Should it be increased and how?
