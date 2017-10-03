@@ -3,7 +3,7 @@
 import asyncio
 import websockets
 import json
-
+import config as cfg
 
 connected = dict()
 
@@ -29,7 +29,8 @@ async def handler(websocket, path):
         await consumer(websocket, message)	
 	
         
-start_server = websockets.serve(handler, '127.0.0.1', 5678)
+#start_server = websockets.serve(handler, '127.0.0.1', 5678)
+start_server = websockets.serve(handler, cfg.config['host'], cfg.config['port'])
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
