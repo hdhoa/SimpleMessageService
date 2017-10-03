@@ -9,16 +9,18 @@ _For this project I have used python 3.6.2._
 In order to run this project, you will have to :
 * install the websockets python library :
 
-‘‘‘
+```
 pip3 install websockets
-‘‘‘
+```
+
 * clone the project
 
 * from the cli, run :
-‘‘‘
+```
 sh start_client.sh
 python3 server/server.py
-‘‘‘
+```
+
 You may have to change python3 to python depending on your setup 
 
 * open two browser windows on http://localhost:8000
@@ -35,21 +37,26 @@ The host and port can be configured in server/config.py
 
 * On connection, in order to log in, the server expects a json object of the following type :
 
-_{'login':'name of the peer'}_
-
+```
+{'login':'name of the peer'}
+```
 Note that the login automatically registers the peer to the server (there is no create user phase, as we do not handle security anyway).
 
 * To send a message, the server expects json objects of the following type :
 
-_{'from':'name of the sender', 'to':'name of the destination', 'msg':'message as a string' }_
-
+```
+{'from':'name of the sender', 'to':'name of the destination', 'msg':'message as a string' }
+```
 If the destination peer B does not exist, you will receive a json object : 
 
-_{'error': 'peer B does not exist'}_
+```
+{'error': 'peer B does not exist'}```
 
 If the destination peer B is disconnected, you will receive a json object : 
 
-_{'error': 'connection to B closed'}_
+```
+{'error': 'connection to B closed'}
+```
 
 ## Questions
 
@@ -63,7 +70,7 @@ Therefore I think using this techno is ok, as it adresses most users.
 
 ### How many users can connect to one server?
 
-A [websocket is a TCP Socket] {https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers}.
+A [websocket is a TCP Socket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers).
 I would therefore think that since we maintain one websocket per user, we would be limited by the number of available file descriptors.
 
 However after some research is seems that [much more] {https://en.wikipedia.org/wiki/C10k_problem} is possible.
