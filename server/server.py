@@ -4,9 +4,13 @@ import asyncio
 import websockets
 import json
 import config as cfg
+import signal
+import sys
+import functools
+import pickle
+import os
 
 wsfromid = dict()
-
 peers= set()
 connected_peers = set()
 
@@ -51,6 +55,7 @@ async def peer_offline(websockersrc, iddest, message) :
 
 
 def store_msg(id, message):
+	global msgqueue
 	if id in msgqueue :
 		msgqueue[id].append(message)
 	else :
@@ -58,6 +63,7 @@ def store_msg(id, message):
 	
 
 def retrieve_msg(id) :
+	global msgqueue
 	if id in msgqueue :
 		msgs=  msgqueue[id]
 		msgqueue[id] =[]
@@ -67,13 +73,56 @@ def retrieve_msg(id) :
 
 async def handler(websocket, path):
 	while True:
-		try :
-			message = await websocket.recv()
-			await consumer(websocket, message)	
+		message = await websocket.recv()
+		await consumer(websocket, message)	
 			
-        
-#start_server = websockets.serve(handler, '127.0.0.1', 5678)
-start_server = websockets.serve(handler, cfg.config['host'], cfg.config['port'])
+def shutdown(loop) :
+	print('Exit, saving data')
+	try:
+		saveData(cfg.config['data_dir'])
+	finally:
+		sys.exit(0)
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+def loadData(datadir) :
+	try:
+		global peers
+		peersF = open(datadir+'/peers','rb') 	
+		peers = pickle.load(peersF)
+		peersF.close()
+		print ('already known peers '+ str(peers))
+	except Exception :
+		print('no previous peers to retrieve')
+	try:	
+		global msgqueue
+		msgsF = open(datadir+'/msgqueue','rb') 
+		msgqueue= pickle.load(msgsF)
+		msgsF.close()
+		print ('msq waiting queue '+ str(msgqueue))
+	except Exception :
+		print('no previous messages to retrieve')	
+
+def saveData(datadir) : 
+	peersF = open(datadir+'/peers','wb') 
+	pickle.dump(peers, peersF )
+	peersF.close()
+	msgsF = open(datadir+'/msgqueue','wb') 
+	pickle.dump(msgqueue, msgsF)
+	msgsF.close()
+
+
+def main():
+	if not os.path.exists(cfg.config['data_dir']):
+		os.makedirs(cfg.config['data_dir'])
+			
+	loadData(cfg.config['data_dir'])
+	start_server = websockets.serve(handler, cfg.config['host'], cfg.config['port'])
+	loop=asyncio.get_event_loop()
+	
+	for signame in ('SIGINT','SIGTERM', 'SIGHUP'):
+		loop.add_signal_handler(getattr(signal, signame), functools.partial(shutdown, loop))
+		
+	loop.run_until_complete(start_server)
+	loop.run_forever()
+
+if __name__ == '__main__':
+    main()
