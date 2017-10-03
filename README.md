@@ -50,7 +50,8 @@ Note that the login automatically registers the peer to the server (there is no 
 If the destination peer B does not exist, you will receive a json object : 
 
 ```
-{'error': 'peer B does not exist'}```
+{'error': 'peer B does not exist'}
+```
 
 If the destination peer B is disconnected, you will receive a json object : 
 
