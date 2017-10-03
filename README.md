@@ -1,7 +1,7 @@
 # SimpleMessageService
 
 
-##How to test
+## How to test with our simple client
 
 Note that I have several version on python running on my laptop, to handle old projects.
 
@@ -22,6 +22,16 @@ You may have to change python3 to python depending on your setup
 * log as user A and user B
 * you can send message between users
 
+## How to test with your own client
+
+* The server listens on ws://127.0.0.1:5678/
+The host and port can be configured in server/config.py
+
+* On connection, in order to log in, the server expects a json object of the following type :
+{'login':'name of the peer'}
+
+* To send a message, the server expects json objects of the following type :
+{'from':'name of the sender', 'to':'name of the destination', 'msg':'message as a string' }
 
 
 ## Questions
@@ -47,16 +57,16 @@ However after some research is seems that [much more] {https://en.wikipedia.org/
 I'm not sure about this question.
 Is it about supporting more users?
 
-* We could simply run several instances of this standalone server.
+#### We could simply run several instances of this standalone server.
 Users on different servers would not be able to communicate but in this case that may not be an issue.
 We want to establish peer to peer connection to share video, and I surmise that one of the criterium of choice is proximity.
 Therefore we could have a load balancer that distributes the clients based on a geographic base.
 Peers would be limited on the choice of video sources without affecting performances.
 
-* If any peer should be able to communicate with any other peers
- * we instantiate several  servers, who share a global list of peers (for example in a shared REDIS)
- * we use a standard hash function to decide on which server a peer A should open a socket to receive messages 
- * to write to peer B, peer A uses the same hash function to know to which server B is listening to
+#### If any peer should be able to communicate with any other peers
+	* we instantiate several  servers, who share a global list of peers (for example in a shared REDIS)
+	* we use a standard hash function to decide on which server a peer A should open a socket to receive messages 
+	* to write to peer B, peer A uses the same hash function to know to which server B is listening to
 This supposes that peer A already knows peer B id. 
 
 
@@ -64,3 +74,4 @@ This supposes that peer A already knows peer B id.
 ### Should an authentication mechanism be put in place and if yes, how?
 
 Yes, as we may want to distribute a video only for paying users, for example.
+
