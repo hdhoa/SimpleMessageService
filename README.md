@@ -13,21 +13,30 @@ In order to run this project, you will have to :
 pip3 install websockets
 ```
 
-* clone the project
-
-* from the cli, run :
+* Clone the project and go to 
 ```
-sh start_client.sh
+git clone git@github.com:hdhoa/SimpleMessageService.git
+cd SimpleMessageService
+```
+
+* From the cli, run :
+```
 python3 server/server.py
 ```
 
-You may have to change python3 to python depending on your setup 
+You may have to change python3 to python depending on your setup .
+* From the cli, run :
+```
+sh start_client.sh
+```
 
-* open two browser windows on http://localhost:8000
-* log as user A and user B
-* you can send message between users
-* when a peer disconnects from the server, messages will be stored and delivered when it comes bak
-* if you shutdown and restart the server, the list of known peers and the message queue will be restored
+This will  start SimpleHTTPServer in the client directory on port 8000
+
+* Open two browser windows on http://localhost:8000
+* Log in as user A and user B (as we do not have an authentication system, login in creates a new known peer)
+* You can send message between users
+* When a peer disconnects from the server, messages will be stored and delivered when it comes bak
+* If you shutdown and restart the server, the list of known peers and the message queue will be restored
 
 ## How to test with your own client
 
