@@ -21,6 +21,8 @@ You may have to change python3 to python depending on your setup
 * open two browser windows on http://localhost:8000
 * log as user A and user B
 * you can send message between users
+* when a peer disconnects from the server, messages will be stored and delivered when it comes bak
+* if you shutdown and restart the server, the list of known peers and the message queue will be restored
 
 ## How to test with your own client
 
